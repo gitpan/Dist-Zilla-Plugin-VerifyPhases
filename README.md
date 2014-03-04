@@ -4,11 +4,11 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 
-In your `dist.ini`, as the last plugin loaded:
+In your `dist.ini`:
 
     [VerifyPhases]
 
@@ -22,9 +22,21 @@ Running at the end of the `-FileGatherer` phase, it verifies that the
 distribution's metadata has not yet been calculated (as it usually depends on
 knowing the full manifest of files in the distribution).
 
-It runs at the `-FileMunger` and `-AfterBuild` phases to record the state
-of files after they have been munged, and again at the end of the build
-process.  Any files that have had their names or content changed are flagged.
+Running at the end of the `-EncodingProvider` phase, it forces all encodings
+to be built (by calling their lazy builders), to use their `SetOnce` property
+to ensure that no subsequent phase attempts to alter a file encoding.
+
+Running at the end of the `-FilePruner` phase, it verifies that no additional
+files have been added to the distribution, nor renamed, since the
+`-FileGatherer` phase.
+
+Running at the end of the `-FileMunger` phase, it verifies that no additional
+files have been added to nor removed from the distribution, nor renamed, since
+the `-FilePruner` phase.
+
+Running at the end of the `-AfterBuild` phase, the full state of all files
+are checked: files may not be added, removed, renamed nor had their content
+change.
 
 Currently, [FromCode](https://metacpan.org/pod/Dist::Zilla::File::FromCode) files are not checked for
 content, as interesting side effects can occur if their content subs are run

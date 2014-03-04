@@ -1,4 +1,16 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.002     2014-03-04 06:37:37Z
+          - avoid warning about late modifications to Makefile.PL and
+            Build.PL, as this is normal and expected
+          - also identify the original filename of a file that has been
+            renamed
+          - additional checks for files removed outside the pruning phase or
+            added after the file gathering phase
+          - additional checks for files having their encodings changed outside
+            of the file gathering or encoding provider phase
+          - at the start of the build, adjust the plugin order so we always
+            run last in each phase
+
 0.001     2014-02-23 05:11:23Z
           - Initial release.
