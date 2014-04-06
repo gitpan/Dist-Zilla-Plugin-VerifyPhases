@@ -23,6 +23,7 @@ my @added_line;
     {
         my $self = shift;
         my $distmeta = $self->zilla->distmeta;  # make the attribute fire
+        my $version = $self->zilla->version;    # make the attribute fire
         push @added_line, __LINE__; $self->add_file( Dist::Zilla::File::InMemory->new(
             name => 'normal_file_0',
             content => 'oh hai!',
@@ -92,6 +93,7 @@ my @added_line;
         [ grep { /\[VerifyPhases\]/ } @{ $tzil->log_messages } ],
         bag(
             '[VerifyPhases] distmeta has already been calculated after file gathering phase!',
+            '[VerifyPhases] version has already been calculated after file gathering phase!',
             "[VerifyPhases] file has been removed after file pruning phase: 'normal_file_0_moved' (content set by Naughty (Dist::Zilla::Plugin::Naughty line $added_line[0]))",
             "[VerifyPhases] file has been renamed after munging phase: 'normal_file_1_moved' (originally 'normal_file_1', content set by Naughty (Dist::Zilla::Plugin::Naughty line $added_line[1]))",
             "[VerifyPhases] file has been removed after file pruning phase: 'normal_file_2' (content set by Naughty (Dist::Zilla::Plugin::Naughty line $added_line[2]))",

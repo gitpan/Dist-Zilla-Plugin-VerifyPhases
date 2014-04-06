@@ -1,5 +1,8 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.003     2014-04-06 20:38:06Z
+          - also check that -VersionProvider plugins do not run too soon
+
 0.002     2014-03-04 06:37:37Z
           - avoid warning about late modifications to Makefile.PL and
             Build.PL, as this is normal and expected

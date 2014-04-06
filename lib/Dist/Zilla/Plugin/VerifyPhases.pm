@@ -4,8 +4,8 @@ package Dist::Zilla::Plugin::VerifyPhases;
 BEGIN {
   $Dist::Zilla::Plugin::VerifyPhases::AUTHORITY = 'cpan:ETHER';
 }
-# git description: v0.001-18-g1f937e5
-$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.002';
+# git description: v0.002-1-gd62718d
+$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.003';
 # ABSTRACT: Compare data and files at different phases of the distribution build process
 # vim: set ts=8 sw=4 tw=78 et :
 
@@ -54,6 +54,10 @@ sub gather_files
     my $distmeta_attr = find_meta($self->zilla)->find_attribute_by_name('distmeta');
     $self->log('distmeta has already been calculated after file gathering phase!')
         if $distmeta_attr->has_value($self->zilla);
+
+    my $version_attr = find_meta($self->zilla)->find_attribute_by_name('version');
+    $self->log('version has already been calculated after file gathering phase!')
+        if $version_attr->has_value($self->zilla);
 
     # all files should have been added by now. save their filenames/objects
     foreach my $file (@{$self->zilla->files})
@@ -247,7 +251,7 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -263,7 +267,9 @@ actions outside the appropriate phase, so they can be fixed.
 
 Running at the end of the C<-FileGatherer> phase, it verifies that the
 distribution's metadata has not yet been calculated (as it usually depends on
-knowing the full manifest of files in the distribution).
+knowing the full manifest of files in the distribution), and that the
+distribution's version has not been calculated (as it can depend on parsing
+file content, before we know their encodings).
 
 Running at the end of the C<-EncodingProvider> phase, it forces all encodings
 to be built (by calling their lazy builders), to use their C<SetOnce> property

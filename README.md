@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # SYNOPSIS
 
@@ -20,7 +20,9 @@ actions outside the appropriate phase, so they can be fixed.
 
 Running at the end of the `-FileGatherer` phase, it verifies that the
 distribution's metadata has not yet been calculated (as it usually depends on
-knowing the full manifest of files in the distribution).
+knowing the full manifest of files in the distribution), and that the
+distribution's version has not been calculated (as it can depend on parsing
+file content, before we know their encodings).
 
 Running at the end of the `-EncodingProvider` phase, it forces all encodings
 to be built (by calling their lazy builders), to use their `SetOnce` property
