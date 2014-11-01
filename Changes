@@ -1,5 +1,12 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.004     2014-11-01 08:47:41Z
+          - fix tests that fail with Dist::Zilla 5.023 (changes to added_by
+            semantics)
+          - also check the execution order of -NameProvider, -LicenseProvider
+            plugins and access time of the abstract, main_module, authors and
+            prereqs attributes
+
 0.003     2014-04-06 20:38:06Z
           - also check that -VersionProvider plugins do not run too soon
 

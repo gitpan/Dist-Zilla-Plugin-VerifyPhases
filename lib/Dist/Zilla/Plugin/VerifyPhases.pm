@@ -1,12 +1,10 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::VerifyPhases;
-BEGIN {
-  $Dist::Zilla::Plugin::VerifyPhases::AUTHORITY = 'cpan:ETHER';
-}
-# git description: v0.002-1-gd62718d
-$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.003';
+# git description: v0.003-12-g943f305
+$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.004';
 # ABSTRACT: Compare data and files at different phases of the distribution build process
+# KEYWORDS: plugin distribution configuration phase verification validation
 # vim: set ts=8 sw=4 tw=78 et :
 
 use Moose;
@@ -19,7 +17,7 @@ with
     'Dist::Zilla::Role::AfterBuild';
 use Moose::Util 'find_meta';
 use Digest::MD5 'md5_hex';
-use List::MoreUtils qw(none first_index first_value);
+use List::Util 1.33 qw(none first);
 use namespace::autoclean;
 
 # filename => { object => $file_object, content => $checksummed_content }
@@ -35,29 +33,28 @@ has skip => (
     default => sub { [ qw(Makefile.PL Build.PL) ] },
 );
 
+# nothing to put in dump_config yet...
+# around dump_config => sub { ... };
+
 sub before_build
 {
     my $self = shift;
 
     # adjust plugin order so that we are always last!
     my $plugins = $self->zilla->plugins;
-    my $index = first_index { $_ == $self } @$plugins;
-
-    splice(@$plugins, $index, 1);
-    push @$plugins, $self;
+    @$plugins = ((grep { $_ != $self } @$plugins), $self);
 }
 
 sub gather_files
 {
     my $self = shift;
 
-    my $distmeta_attr = find_meta($self->zilla)->find_attribute_by_name('distmeta');
-    $self->log('distmeta has already been calculated after file gathering phase!')
-        if $distmeta_attr->has_value($self->zilla);
-
-    my $version_attr = find_meta($self->zilla)->find_attribute_by_name('version');
-    $self->log('version has already been calculated after file gathering phase!')
-        if $version_attr->has_value($self->zilla);
+    foreach my $attr_name (qw(name version abstract main_module license authors distmeta))
+    {
+        my $attr = find_meta($self->zilla)->find_attribute_by_name($attr_name);
+        $self->log($attr_name . ' has already been calculated by end of file gathering phase')
+            if $attr->has_value($self->zilla);
+    }
 
     # all files should have been added by now. save their filenames/objects
     foreach my $file (@{$self->zilla->files})
@@ -107,15 +104,15 @@ sub prune_files
         }
 
         # file has been renamed - an odd time to do this
-        if (my $orig_filename = first_value { $all_files{$_}{object} == $file } keys %all_files)
+        if (my $orig_filename = first { $all_files{$_}{object} == $file } keys %all_files)
         {
-            $self->log('file has been renamed after file gathering phase: \'' . $file->name
+            $self->log('file has been renamed by end of file gathering phase: \'' . $file->name
                 . "' (originally '$orig_filename', " . $file->added_by . ')');
             delete $all_files{$orig_filename};
             next;
         }
 
-        $self->log('file has been added after file gathering phase: \'' . $file->name
+        $self->log('file has been added by end of file gathering phase: \'' . $file->name
             . '\' (' . $file->added_by . ')');
     }
 
@@ -153,21 +150,21 @@ sub munge_files
         }
 
         # file has been renamed - but this is okay by a file munger
-        if (my $orig_filename = first_value { $all_files{$_}{object} == $file } keys %all_files)
+        if (my $orig_filename = first { $all_files{$_}{object} == $file } keys %all_files)
         {
             delete $all_files{$orig_filename};
             next;
         }
 
         # this is a new file we haven't seen before.
-        $self->log('file has been added after file gathering phase: \'' . $file->name
+        $self->log('file has been added by end of file gathering phase: \'' . $file->name
             . '\' (' . $file->added_by . ')');
     }
 
     # now report on any files added earlier that were removed.
     foreach my $filename (keys %all_files)
     {
-        $self->log('file has been removed after file pruning phase: \'' . $filename
+        $self->log('file has been removed by end of file pruning phase: \'' . $filename
             . '\' (' . $all_files{$filename}{object}->added_by . ')');
     }
 
@@ -186,6 +183,12 @@ sub munge_files
                 : md5_hex($file->encoded_content) ),
         }
     }
+
+    # verify that nothing has tried to read the prerequisite data yet
+    # (not possible until the attribute stops being unlazily built)
+    # my $prereq_attr = find_meta($self->zilla)->find_attribute_by_name('prereqs');
+    # $self->log('prereqs have already been read from by end of munging phase!')
+    #     if $prereq_attr->has_value($self->zilla);
 }
 
 # since last phase,
@@ -201,15 +204,15 @@ sub after_build
     {
         if (not $all_files{$file->name} or $all_files{$file->name}{object} != $file)
         {
-            if (my $orig_filename = first_value { $all_files{$_}{object} == $file } keys %all_files)
+            if (my $orig_filename = first { $all_files{$_}{object} == $file } keys %all_files)
             {
-                $self->log('file has been renamed after munging phase: \'' . $file->name
+                $self->log('file has been renamed by end of munging phase: \'' . $file->name
                     . "' (originally '$orig_filename', " . $file->added_by . ')');
                 delete $all_files{$orig_filename};
             }
             else
             {
-                $self->log('file has been added after file gathering phase: \'' . $file->name
+                $self->log('file has been added by end of file gathering phase: \'' . $file->name
                     . '\' (' . $file->added_by . ')');
             }
             next;
@@ -217,7 +220,7 @@ sub after_build
 
         # we give FromCode files a bye, since there is a good reason why their
         # content at file munging time is incomplete
-        $self->log('content has changed after munging phase: \'' . $file->name
+        $self->log('content has changed by end of munging phase: \'' . $file->name
             # this looks suspicious; we ought to have separate added_by,
             # changed_by attributes
                 . '\' (' . $file->added_by . ')')
@@ -230,7 +233,7 @@ sub after_build
 
     foreach my $filename (keys %all_files)
     {
-        $self->log('file has been removed after file pruning phase: \'' . $filename
+        $self->log('file has been removed by end of file pruning phase: \'' . $filename
             . '\' (' . $all_files{$filename}{object}->added_by . ')');
     }
 }
@@ -243,15 +246,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Karen Etheridge FromCode irc
-
 =head1 NAME
 
 Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases of the distribution build process
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -266,10 +267,41 @@ taken place so far.  Its intent is to find any plugins that are performing
 actions outside the appropriate phase, so they can be fixed.
 
 Running at the end of the C<-FileGatherer> phase, it verifies that the
-distribution's metadata has not yet been calculated (as it usually depends on
-knowing the full manifest of files in the distribution), and that the
-distribution's version has not been calculated (as it can depend on parsing
-file content, before we know their encodings).
+following distribution properties have not yet been populated/calculated, as
+they usually depend on having the full complement of files added to the
+distribution, with known encodings:
+
+=over 4
+
+=item *
+
+name
+
+=item *
+
+version
+
+=item *
+
+abstract
+
+=item *
+
+main_module
+
+=item *
+
+license
+
+=item *
+
+authors
+
+=item *
+
+metadata
+
+=back
 
 Running at the end of the C<-EncodingProvider> phase, it forces all encodings
 to be built (by calling their lazy builders), to use their C<SetOnce> property
@@ -281,11 +313,14 @@ C<-FileGatherer> phase.
 
 Running at the end of the C<-FileMunger> phase, it verifies that no additional
 files have been added to nor removed from the distribution, nor renamed, since
-the C<-FilePruner> phase.
+the C<-FilePruner> phase. Additionally, it verifies that the prerequisite list
+has not yet been read from.
 
 Running at the end of the C<-AfterBuild> phase, the full state of all files
 are checked: files may not be added, removed, renamed nor had their content
 change.
+
+=for stopwords FromCode
 
 Currently, L<FromCode|Dist::Zilla::File::FromCode> files are not checked for
 content, as interesting side effects can occur if their content subs are run
@@ -295,6 +330,8 @@ early, resulting in incomplete or missing data).
 =for Pod::Coverage before_build gather_files set_file_encodings prune_files munge_files after_build
 
 =head1 SUPPORT
+
+=for stopwords irc
 
 Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-PluginBundle-Author-ETHER>
 (or L<bug-Dist-Zilla-PluginBundle-Author-ETHER@rt.cpan.org|mailto:bug-Dist-Zilla-PluginBundle-Author-ETHER@rt.cpan.org>).

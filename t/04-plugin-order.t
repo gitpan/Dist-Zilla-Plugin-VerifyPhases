@@ -28,6 +28,7 @@ use Path::Tiny;
         'plugin order is as loaded, before the build is executed',
     );
 
+    $tzil->chrome->logger->set_debug(1);
     $tzil->build;
 
     cmp_deeply(
@@ -35,6 +36,9 @@ use Path::Tiny;
         [ qw(GatherDir MetaConfig Prereqs VerifyPhases)  ],
         'after the build, [VerifyPhases] is last',
     );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

@@ -25,15 +25,21 @@ use Path::Tiny;
 
     cmp_deeply(
         [
-            grep { /\[VerifyPhases\]/ }
-            # TODO: waiting for https://github.com/rjbs/Dist-Zilla/pull/229
-            grep { ! /^\[VerifyPhases\] file has been added after file gathering phase: 'Makefile.PL'/ }
+            grep {
+                /\[VerifyPhases\]/
+                && ! /^\[VerifyPhases\] .* has already been calculated by end of file gathering phase/
+                && ( Dist::Zilla->VERSION < 5.022
+                    ? ! /^\[VerifyPhases\] file has been added by end of file gathering phase: 'Makefile.PL'/
+                    : 1 )
+            }
                 @{ $tzil->log_messages }
         ],
         [],
         'no warnings from the plugin despite Makefile.PL being modified late',
-    )
-    or diag 'got messages: ', explain $tzil->log_messages;
+    );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;
