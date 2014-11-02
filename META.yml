@@ -44,7 +44,7 @@ no_index:
 provides:
   Dist::Zilla::Plugin::VerifyPhases:
     file: lib/Dist/Zilla/Plugin/VerifyPhases.pm
-    version: '0.004'
+    version: '0.005'
 requires:
   Digest::MD5: '0'
   Dist::Zilla::Role::AfterBuild: '0'
@@ -66,7 +66,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-VerifyPhases
   homepage: https://github.com/karenetheridge/Dist-Zilla-Plugin-VerifyPhases
   repository: https://github.com/karenetheridge/Dist-Zilla-Plugin-VerifyPhases.git
-version: '0.004'
+version: '0.005'
 x_Dist_Zilla:
   perl:
     version: '5.021005'
@@ -636,7 +636,7 @@ x_Dist_Zilla:
         Dist::Zilla::Plugin::Git::Tag:
           branch: ~
           signed: 0
-          tag: v0.004
+          tag: v0.005
           tag_format: v%v%t
           tag_message: v%v%t
           time_zone: local

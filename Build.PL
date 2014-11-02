@@ -71,7 +71,7 @@ EOW
         "Karen Etheridge <ether\@cpan.org>"
       ],
       "dist_name" => "Dist-Zilla-Plugin-VerifyPhases",
-      "dist_version" => "0.004",
+      "dist_version" => "0.005",
       "license" => "perl",
       "module_name" => "Dist::Zilla::Plugin::VerifyPhases",
       "recommends" => {},

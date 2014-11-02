@@ -1,5 +1,9 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.005     2014-11-02 05:44:51Z
+          - avoid reporting false positives for core zilla attributes that
+            were set at construction time (via root config or stash)
+
 0.004     2014-11-01 08:47:41Z
           - fix tests that fail with Dist::Zilla 5.023 (changes to added_by
             semantics)
