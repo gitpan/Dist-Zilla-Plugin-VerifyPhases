@@ -1,5 +1,9 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.006     2014-11-06 04:35:42Z
+          - now also checking for premature prereq calculation, given a new
+            enough Dist::Zilla
+
 0.005     2014-11-02 05:44:51Z
           - avoid reporting false positives for core zilla attributes that
             were set at construction time (via root config or stash)

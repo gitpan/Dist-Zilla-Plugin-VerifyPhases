@@ -121,7 +121,7 @@ my (@content_line, @filename_line);
             "[VerifyPhases] file has been removed after file pruning phase: 'normal_file_2' (content $verb by Naughty (Dist::Zilla::Plugin::Naughty line $content_line[2]))",
             "[VerifyPhases] file has been added after file gathering phase: 'rogue_file_3' (content $verb by Naughty (Dist::Zilla::Plugin::Naughty line $content_line[3]))",
             "[VerifyPhases] file has been added after file gathering phase: 'rogue_file_4' (content $verb by Naughty (Dist::Zilla::Plugin::Naughty line $content_line[4]))",
-            # "[VerifyPhases] prereqs have already been read from after munging phase!",
+            Dist::Zilla->VERSION >= 5.024 ? "[VerifyPhases] prereqs have already been read from after munging phase!" : (),
         ),
         'warnings are logged about our naughty plugin',
     );

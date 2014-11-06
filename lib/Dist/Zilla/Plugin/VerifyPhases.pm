@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::VerifyPhases;
-# git description: v0.004-4-gc699ce3
-$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.005';
+# git description: v0.005-1-g1911da9
+$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.006';
 # ABSTRACT: Compare data and files at different phases of the distribution build process
 # KEYWORDS: plugin distribution configuration phase verification validation
 # vim: set ts=8 sw=4 tw=78 et :
@@ -209,10 +209,10 @@ sub munge_files
     }
 
     # verify that nothing has tried to read the prerequisite data yet
-    # (not possible until the attribute stops being unlazily built)
-    # my $prereq_attr = find_meta($self->zilla)->find_attribute_by_name('prereqs');
-    # $self->log('prereqs have already been read from after munging phase!')
-    #     if $prereq_attr->has_value($self->zilla);
+    # (only possible when the attribute is lazily built)
+    my $prereq_attr = find_meta($self->zilla)->find_attribute_by_name('prereqs');
+    $self->log('prereqs have already been read from after munging phase!')
+         if Dist::Zilla->VERSION >= 5.024 and $prereq_attr->has_value($self->zilla);
 }
 
 # since last phase,
@@ -276,7 +276,7 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
 =head1 SYNOPSIS
 
@@ -338,7 +338,7 @@ C<-FileGatherer> phase.
 Running at the end of the C<-FileMunger> phase, it verifies that no additional
 files have been added to nor removed from the distribution, nor renamed, since
 the C<-FilePruner> phase. Additionally, it verifies that the prerequisite list
-has not yet been read from.
+has not yet been read from, when possible.
 
 Running at the end of the C<-AfterBuild> phase, the full state of all files
 are checked: files may not be added, removed, renamed nor had their content
