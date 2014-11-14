@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::VerifyPhases;
-# git description: v0.005-1-g1911da9
-$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.006';
+# git description: v0.006-1-gd83e482
+$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.007';
 # ABSTRACT: Compare data and files at different phases of the distribution build process
 # KEYWORDS: plugin distribution configuration phase verification validation
 # vim: set ts=8 sw=4 tw=78 et :
@@ -18,6 +18,7 @@ with
 use Moose::Util 'find_meta';
 use Digest::MD5 'md5_hex';
 use List::Util 1.33 qw(none first any);
+use Term::ANSIColor 'colored';
 use namespace::autoclean;
 
 # filename => { object => $file_object, content => $checksummed_content }
@@ -68,13 +69,13 @@ sub gather_files
     foreach my $attr_name (qw(name version abstract main_module authors distmeta))
     {
         next if exists $zilla_constructor_args{$attr_name};
-        $self->log($attr_name . ' has already been calculated by end of file gathering phase')
+        $self->_alert($attr_name . ' has already been calculated by end of file gathering phase')
             if find_meta($zilla)->find_attribute_by_name($attr_name)->has_value($zilla);
     }
 
     # license is created from some private attrs, which may have been provided
     # at construction time
-    $self->log('license has already been calculated by end of file gathering phase')
+    $self->_alert('license has already been calculated by end of file gathering phase')
         if any {
             not exists $zilla_constructor_args{$_}
                 and find_meta($zilla)->find_attribute_by_name($_)->has_value($zilla)
@@ -130,13 +131,13 @@ sub prune_files
         # file has been renamed - an odd time to do this
         if (my $orig_filename = first { $all_files{$_}{object} == $file } keys %all_files)
         {
-            $self->log('file has been renamed after file gathering phase: \'' . $file->name
+            $self->_alert('file has been renamed after file gathering phase: \'' . $file->name
                 . "' (originally '$orig_filename', " . $file->added_by . ')');
             delete $all_files{$orig_filename};
             next;
         }
 
-        $self->log('file has been added after file gathering phase: \'' . $file->name
+        $self->_alert('file has been added after file gathering phase: \'' . $file->name
             . '\' (' . $file->added_by . ')');
     }
 
@@ -181,14 +182,14 @@ sub munge_files
         }
 
         # this is a new file we haven't seen before.
-        $self->log('file has been added after file gathering phase: \'' . $file->name
+        $self->_alert('file has been added after file gathering phase: \'' . $file->name
             . '\' (' . $file->added_by . ')');
     }
 
     # now report on any files added earlier that were removed.
     foreach my $filename (keys %all_files)
     {
-        $self->log('file has been removed after file pruning phase: \'' . $filename
+        $self->_alert('file has been removed after file pruning phase: \'' . $filename
             . '\' (' . $all_files{$filename}{object}->added_by . ')');
     }
 
@@ -211,7 +212,7 @@ sub munge_files
     # verify that nothing has tried to read the prerequisite data yet
     # (only possible when the attribute is lazily built)
     my $prereq_attr = find_meta($self->zilla)->find_attribute_by_name('prereqs');
-    $self->log('prereqs have already been read from after munging phase!')
+    $self->_alert('prereqs have already been read from after munging phase!')
          if Dist::Zilla->VERSION >= 5.024 and $prereq_attr->has_value($self->zilla);
 }
 
@@ -230,13 +231,13 @@ sub after_build
         {
             if (my $orig_filename = first { $all_files{$_}{object} == $file } keys %all_files)
             {
-                $self->log('file has been renamed after munging phase: \'' . $file->name
+                $self->_alert('file has been renamed after munging phase: \'' . $file->name
                     . "' (originally '$orig_filename', " . $file->added_by . ')');
                 delete $all_files{$orig_filename};
             }
             else
             {
-                $self->log('file has been added after file gathering phase: \'' . $file->name
+                $self->_alert('file has been added after file gathering phase: \'' . $file->name
                     . '\' (' . $file->added_by . ')');
             }
             next;
@@ -244,7 +245,7 @@ sub after_build
 
         # we give FromCode files a bye, since there is a good reason why their
         # content at file munging time is incomplete
-        $self->log('content has changed after munging phase: \'' . $file->name
+        $self->_alert('content has changed after munging phase: \'' . $file->name
             # this looks suspicious; we ought to have separate added_by,
             # changed_by attributes
                 . '\' (' . $file->added_by . ')')
@@ -257,9 +258,15 @@ sub after_build
 
     foreach my $filename (keys %all_files)
     {
-        $self->log('file has been removed after file pruning phase: \'' . $filename
+        $self->_alert('file has been removed after file pruning phase: \'' . $filename
             . '\' (' . $all_files{$filename}{object}->added_by . ')');
     }
+}
+
+sub _alert
+{
+    my $self = shift;
+    $self->log(colored(join(' ', @_), 'bright_red'));
 }
 
 1;
@@ -276,7 +283,7 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 =head1 VERSION
 
-version 0.006
+version 0.007
 
 =head1 SYNOPSIS
 

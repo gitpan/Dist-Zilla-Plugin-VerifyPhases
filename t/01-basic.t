@@ -6,6 +6,7 @@ use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::Deep;
 use Test::DZil;
 use Path::Tiny;
+use Term::ANSIColor 2.01 'colorstrip';
 
 my (@content_line, @filename_line);
 {
@@ -112,7 +113,7 @@ my (@content_line, @filename_line);
     my $verb = Dist::Zilla->VERSION < 5.023 ? 'set' : 'added';
 
     cmp_deeply(
-        [ grep { /\[VerifyPhases\]/ } @{ $tzil->log_messages } ],
+        [ grep { /\[VerifyPhases\]/ } map { colorstrip($_) } @{ $tzil->log_messages } ],
         bag(
             (map { "[VerifyPhases] $_ has already been calculated by end of file gathering phase" }
                 qw(name version abstract main_module license authors distmeta)),
