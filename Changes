@@ -1,5 +1,8 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.008     2014-11-15 03:02:07Z
+          - fix test failure with older Dist::Zilla and coloured log messages
+
 0.007     2014-11-14 01:34:39Z
           - use colour in log messages for greater visibility
 

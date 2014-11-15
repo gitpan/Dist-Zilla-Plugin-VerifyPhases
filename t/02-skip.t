@@ -6,6 +6,7 @@ use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 use Test::Deep;
 use Test::DZil;
 use Path::Tiny;
+use Term::ANSIColor 2.01 'colorstrip';
 
 {
     my $tzil = Builder->from_config(
@@ -31,7 +32,7 @@ use Path::Tiny;
                     ? ! /^\[VerifyPhases\] file has been added after file gathering phase: 'Makefile.PL'/
                     : 1 )
             }
-                @{ $tzil->log_messages }
+            map { colorstrip($_) } @{ $tzil->log_messages }
         ],
         [],
         'no warnings from the plugin despite Makefile.PL being modified late',

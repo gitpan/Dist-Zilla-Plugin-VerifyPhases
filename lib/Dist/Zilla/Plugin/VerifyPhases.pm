@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::VerifyPhases;
-# git description: v0.006-1-gd83e482
-$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.007';
+# git description: v0.007-1-g7b2a44a
+$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.008';
 # ABSTRACT: Compare data and files at different phases of the distribution build process
 # KEYWORDS: plugin distribution configuration phase verification validation
 # vim: set ts=8 sw=4 tw=78 et :
@@ -283,7 +283,7 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 =head1 VERSION
 
-version 0.007
+version 0.008
 
 =head1 SYNOPSIS
 
