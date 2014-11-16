@@ -1,5 +1,8 @@
 Revision history for Dist-Zilla-Plugin-VerifyPhases
 
+0.009     2014-11-16 04:02:48Z
+          - bump required version of Term::ANSIColor for bright colours
+
 0.008     2014-11-15 03:02:07Z
           - fix test failure with older Dist::Zilla and coloured log messages
 

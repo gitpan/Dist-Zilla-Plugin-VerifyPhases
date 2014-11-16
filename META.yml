@@ -13,7 +13,6 @@ build_requires:
   File::Spec: '0'
   Path::Tiny: '0'
   Software::License::Artistic_2_0: '0'
-  Term::ANSIColor: '2.01'
   Test::DZil: '0'
   Test::Deep: '0'
   Test::Fatal: '0'
@@ -44,7 +43,7 @@ no_index:
 provides:
   Dist::Zilla::Plugin::VerifyPhases:
     file: lib/Dist/Zilla/Plugin/VerifyPhases.pm
-    version: '0.008'
+    version: '0.009'
 requires:
   Digest::MD5: '0'
   Dist::Zilla::Role::AfterBuild: '0'
@@ -56,7 +55,7 @@ requires:
   List::Util: '1.33'
   Moose: '0'
   Moose::Util: '0'
-  Term::ANSIColor: '2.01'
+  Term::ANSIColor: '3.00'
   namespace::autoclean: '0'
   perl: '5.006'
   strict: '0'
@@ -67,7 +66,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-VerifyPhases
   homepage: https://github.com/karenetheridge/Dist-Zilla-Plugin-VerifyPhases
   repository: https://github.com/karenetheridge/Dist-Zilla-Plugin-VerifyPhases.git
-version: '0.008'
+version: '0.009'
 x_Dist_Zilla:
   perl:
     version: '5.021005'
@@ -193,6 +192,10 @@ x_Dist_Zilla:
       name: '@Author::ETHER/generate CONTRIBUTING'
       version: '0.005'
     -
+      class: Dist::Zilla::Plugin::InstallGuide
+      name: '@Author::ETHER/InstallGuide'
+      version: '1.200005'
+    -
       class: Dist::Zilla::Plugin::Test::Compile
       config:
         Dist::Zilla::Plugin::Test::Compile:
@@ -291,17 +294,6 @@ x_Dist_Zilla:
       name: '@Author::ETHER/PkgVersion'
       version: '5.025'
     -
-      class: Dist::Zilla::Plugin::AuthorityFromModule
-      config:
-        Dist::Zilla::Plugin::AuthorityFromModule:
-          module: Dist::Zilla::Plugin::VerifyPhases
-      name: '@Author::ETHER/AuthorityFromModule'
-      version: '0.003'
-    -
-      class: Dist::Zilla::Plugin::Authority
-      name: '@Author::ETHER/Authority'
-      version: '1.009'
-    -
       class: Dist::Zilla::Plugin::PodWeaver
       config:
         Dist::Zilla::Plugin::PodWeaver:
@@ -395,6 +387,17 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::AutoMetaResources
       name: '@Author::ETHER/AutoMetaResources'
       version: '1.20'
+    -
+      class: Dist::Zilla::Plugin::AuthorityFromModule
+      config:
+        Dist::Zilla::Plugin::AuthorityFromModule:
+          module: Dist::Zilla::Plugin::VerifyPhases
+      name: '@Author::ETHER/AuthorityFromModule'
+      version: '0.003'
+    -
+      class: Dist::Zilla::Plugin::Authority
+      name: '@Author::ETHER/Authority'
+      version: '1.009'
     -
       class: Dist::Zilla::Plugin::MetaNoIndex
       name: '@Author::ETHER/MetaNoIndex'
@@ -494,10 +497,6 @@ x_Dist_Zilla:
       name: '@Author::ETHER/ModuleBuildTiny::Fallback'
       version: '0.014'
     -
-      class: Dist::Zilla::Plugin::InstallGuide
-      name: '@Author::ETHER/InstallGuide'
-      version: '1.200005'
-    -
       class: Dist::Zilla::Plugin::RunExtraTests
       config:
         Dist::Zilla::Role::TestRunner:
@@ -511,7 +510,7 @@ x_Dist_Zilla:
           finder:
             - ':InstallModules'
       name: '@Author::ETHER/CheckSelfDependency'
-      version: '0.007'
+      version: '0.008'
     -
       class: Dist::Zilla::Plugin::Run::AfterBuild
       config:
@@ -637,7 +636,7 @@ x_Dist_Zilla:
         Dist::Zilla::Plugin::Git::Tag:
           branch: ~
           signed: 0
-          tag: v0.008
+          tag: v0.009
           tag_format: v%v%t
           tag_message: v%v%t
           time_zone: local

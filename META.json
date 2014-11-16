@@ -36,7 +36,7 @@
       },
       "develop" : {
          "recommends" : {
-            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.078"
+            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.079"
          },
          "requires" : {
             "Dist::Zilla" : "5",
@@ -79,14 +79,14 @@
             "Dist::Zilla::Plugin::MetaResources" : "0",
             "Dist::Zilla::Plugin::MetaTests" : "0",
             "Dist::Zilla::Plugin::MetaYAML" : "0",
-            "Dist::Zilla::Plugin::MinimumPerl" : "0",
+            "Dist::Zilla::Plugin::MinimumPerl" : "1.006",
             "Dist::Zilla::Plugin::ModuleBuildTiny::Fallback" : "0.006",
             "Dist::Zilla::Plugin::MojibakeTests" : "0",
             "Dist::Zilla::Plugin::NextRelease" : "4.300018",
             "Dist::Zilla::Plugin::PkgVersion" : "5.010",
             "Dist::Zilla::Plugin::PodCoverageTests" : "0",
             "Dist::Zilla::Plugin::PodSyntaxTests" : "0",
-            "Dist::Zilla::Plugin::PodWeaver" : "0",
+            "Dist::Zilla::Plugin::PodWeaver" : "4.005",
             "Dist::Zilla::Plugin::Prereqs" : "0",
             "Dist::Zilla::Plugin::Prereqs::AuthorDeps" : "0",
             "Dist::Zilla::Plugin::PromptIfStale" : "0",
@@ -94,18 +94,18 @@
             "Dist::Zilla::Plugin::ReadmeAnyFromPod" : "0.142180",
             "Dist::Zilla::Plugin::Run::AfterBuild" : "0.024",
             "Dist::Zilla::Plugin::Run::AfterRelease" : "0.024",
-            "Dist::Zilla::Plugin::RunExtraTests" : "0.019",
+            "Dist::Zilla::Plugin::RunExtraTests" : "0.024",
             "Dist::Zilla::Plugin::ShareDir" : "0",
             "Dist::Zilla::Plugin::Test::CPAN::Changes" : "0.008",
             "Dist::Zilla::Plugin::Test::ChangesHasContent" : "0",
             "Dist::Zilla::Plugin::Test::CleanNamespaces" : "0",
             "Dist::Zilla::Plugin::Test::Compile" : "2.039",
             "Dist::Zilla::Plugin::Test::EOL" : "0.14",
-            "Dist::Zilla::Plugin::Test::Kwalitee" : "0",
+            "Dist::Zilla::Plugin::Test::Kwalitee" : "2.06",
             "Dist::Zilla::Plugin::Test::MinimumVersion" : "2.000003",
-            "Dist::Zilla::Plugin::Test::NoTabs" : "0",
+            "Dist::Zilla::Plugin::Test::NoTabs" : "0.08",
             "Dist::Zilla::Plugin::Test::Pod::No404s" : "0",
-            "Dist::Zilla::Plugin::Test::PodSpelling" : "0",
+            "Dist::Zilla::Plugin::Test::PodSpelling" : "2.006001",
             "Dist::Zilla::Plugin::Test::Portability" : "0",
             "Dist::Zilla::Plugin::Test::ReportPrereqs" : "0.019",
             "Dist::Zilla::Plugin::TestRelease" : "0",
@@ -140,7 +140,7 @@
             "List::Util" : "1.33",
             "Moose" : "0",
             "Moose::Util" : "0",
-            "Term::ANSIColor" : "2.01",
+            "Term::ANSIColor" : "3.00",
             "namespace::autoclean" : "0",
             "perl" : "5.006",
             "strict" : "0",
@@ -162,7 +162,6 @@
             "File::Spec" : "0",
             "Path::Tiny" : "0",
             "Software::License::Artistic_2_0" : "0",
-            "Term::ANSIColor" : "2.01",
             "Test::DZil" : "0",
             "Test::Deep" : "0",
             "Test::Fatal" : "0",
@@ -175,7 +174,7 @@
    "provides" : {
       "Dist::Zilla::Plugin::VerifyPhases" : {
          "file" : "lib/Dist/Zilla/Plugin/VerifyPhases.pm",
-         "version" : "0.008"
+         "version" : "0.009"
       }
    },
    "release_status" : "stable",
@@ -193,7 +192,7 @@
       "x_IRC" : "irc://irc.perl.org/#distzilla",
       "x_MailingList" : "http://dzil.org/#mailing-list"
    },
-   "version" : "0.008",
+   "version" : "0.009",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.021005"
@@ -355,6 +354,11 @@
             "version" : "0.005"
          },
          {
+            "class" : "Dist::Zilla::Plugin::InstallGuide",
+            "name" : "@Author::ETHER/InstallGuide",
+            "version" : "1.200005"
+         },
+         {
             "class" : "Dist::Zilla::Plugin::Test::Compile",
             "config" : {
                "Dist::Zilla::Plugin::Test::Compile" : {
@@ -481,21 +485,6 @@
             "version" : "5.025"
          },
          {
-            "class" : "Dist::Zilla::Plugin::AuthorityFromModule",
-            "config" : {
-               "Dist::Zilla::Plugin::AuthorityFromModule" : {
-                  "module" : "Dist::Zilla::Plugin::VerifyPhases"
-               }
-            },
-            "name" : "@Author::ETHER/AuthorityFromModule",
-            "version" : "0.003"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::Authority",
-            "name" : "@Author::ETHER/Authority",
-            "version" : "1.009"
-         },
-         {
             "class" : "Dist::Zilla::Plugin::PodWeaver",
             "config" : {
                "Dist::Zilla::Plugin::PodWeaver" : {
@@ -614,6 +603,21 @@
             "class" : "Dist::Zilla::Plugin::AutoMetaResources",
             "name" : "@Author::ETHER/AutoMetaResources",
             "version" : "1.20"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::AuthorityFromModule",
+            "config" : {
+               "Dist::Zilla::Plugin::AuthorityFromModule" : {
+                  "module" : "Dist::Zilla::Plugin::VerifyPhases"
+               }
+            },
+            "name" : "@Author::ETHER/AuthorityFromModule",
+            "version" : "0.003"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Authority",
+            "name" : "@Author::ETHER/Authority",
+            "version" : "1.009"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaNoIndex",
@@ -750,11 +754,6 @@
             "version" : "0.014"
          },
          {
-            "class" : "Dist::Zilla::Plugin::InstallGuide",
-            "name" : "@Author::ETHER/InstallGuide",
-            "version" : "1.200005"
-         },
-         {
             "class" : "Dist::Zilla::Plugin::RunExtraTests",
             "config" : {
                "Dist::Zilla::Role::TestRunner" : {
@@ -774,7 +773,7 @@
                }
             },
             "name" : "@Author::ETHER/CheckSelfDependency",
-            "version" : "0.007"
+            "version" : "0.008"
          },
          {
             "class" : "Dist::Zilla::Plugin::Run::AfterBuild",
@@ -946,7 +945,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "v0.008",
+                  "tag" : "v0.009",
                   "tag_format" : "v%v%t",
                   "tag_message" : "v%v%t",
                   "time_zone" : "local"

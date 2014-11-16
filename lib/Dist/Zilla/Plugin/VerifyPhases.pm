@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::VerifyPhases;
-# git description: v0.007-1-g7b2a44a
-$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.008';
+# git description: v0.008-1-gc471186
+$Dist::Zilla::Plugin::VerifyPhases::VERSION = '0.009';
 # ABSTRACT: Compare data and files at different phases of the distribution build process
 # KEYWORDS: plugin distribution configuration phase verification validation
 # vim: set ts=8 sw=4 tw=78 et :
@@ -18,7 +18,7 @@ with
 use Moose::Util 'find_meta';
 use Digest::MD5 'md5_hex';
 use List::Util 1.33 qw(none first any);
-use Term::ANSIColor 'colored';
+use Term::ANSIColor 3.00 'colored';
 use namespace::autoclean;
 
 # filename => { object => $file_object, content => $checksummed_content }
@@ -283,7 +283,7 @@ Dist::Zilla::Plugin::VerifyPhases - Compare data and files at different phases o
 
 =head1 VERSION
 
-version 0.008
+version 0.009
 
 =head1 SYNOPSIS
 
